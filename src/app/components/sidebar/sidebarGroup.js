@@ -12,6 +12,7 @@ export function SidebarGroup(props) {
       props.onClickBackButton();
     }
   };
+
   useEffect(() => {
     document.addEventListener("keydown", handleKeyEscape);
 
