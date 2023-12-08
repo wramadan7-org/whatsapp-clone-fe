@@ -1,9 +1,44 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+import moment from "moment";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import { BsCheckAll, BsCheckLg, BsFillPersonFill } from "react-icons/bs";
 import { IoIosArrowDown } from "react-icons/io";
 import { TbClock2 } from "react-icons/tb";
 
 export default function Message(props) {
+  const [date, setDate] = useState("");
+
+  const dateStartWith = moment(props.date, "YYYY-MM-DD h:mm:ss a").calendar().split(" ");
+
+  const refactorDate = () => {
+    if (dateStartWith[0] === "Today") {
+      if (dateStartWith[3] === "PM") {
+        const defaultTime = props.date.split(" ")[1];
+        const splitTime = defaultTime.split(":");
+        setDate(`${splitTime[0]}.${splitTime[1]}`);
+      } else {
+        const splitTime = dateStartWith[2].split(":")
+        setDate(
+          splitTime[0].length === 1
+            ? `0${splitTime[0]}.${splitTime[1]}`
+            : dateStartWith[2]
+        );
+      }
+    } else if (
+      dateStartWith[0] === "Yesterday" &&
+      /^[a-zA-Z]+$/.test(dateStartWith[0])
+    ) {
+      setDate(dateStartWith[0]);
+    } else {
+      setDate(moment(props.date, "YYYY-MM-DD").format("L"));
+    }
+  };
+
+  useEffect(() => {
+    refactorDate();
+  }, [props]);
+
   return (
     <button
       type="button"
@@ -33,20 +68,29 @@ export default function Message(props) {
 
           {/* Date */}
           <span className="font-medium text-[#8696a0] text-sm pr-3">
-            {props.date}
+            {date}
           </span>
         </div>
 
         {/* Icon and message */}
         <div className="flex flex-row items-center gap-x-1">
           {/* Icon check send message and pending */}
-          {props.isSend && props.status === "pending" && <BsCheckLg size={24} color="#6c7b7e" />}
+          {props.isSend && props.status === "pending" && (
+            <BsCheckLg size={24} color="#6c7b7e" />
+          )}
 
           {/* Icon check send message and success */}
-          {props.isSend && props.status === "success" && <BsCheckAll size={24} color={props.isRead ? "#53bdeb": "#6c7b7e"} />}
+          {props.isSend && props.status === "success" && (
+            <BsCheckAll
+              size={24}
+              color={props.isRead ? "#53bdeb" : "#6c7b7e"}
+            />
+          )}
 
           {/* Icon check send message and error */}
-          {props.isSend && props.status === "error" && <TbClock2 size={20} color="#f73737fa" />}
+          {props.isSend && props.status === "error" && (
+            <TbClock2 size={20} color="#f73737fa" />
+          )}
 
           <div className="flex flex-row justify-between items-center w-full pr-3">
             {/* Message */}

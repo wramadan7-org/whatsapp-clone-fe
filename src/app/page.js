@@ -20,6 +20,7 @@ import { messages } from "@/app/constants/dummy";
 import { useEffect, useState } from "react";
 import DetailMessage from "./components/message/detailMessage";
 import { SidebarGroup } from "./components/sidebar/sidebarGroup";
+import { SidebarStory } from "./components/sidebar/sidebarStory";
 
 export default function Home() {
   const [isShowListMessage, setIsShowListMessage] = useState(false);
@@ -76,6 +77,10 @@ export default function Home() {
     <main className="flex min-h-screen flex-row items-center justify-between">
       {menu === "group" && (
         <SidebarGroup onClickBackButton={handleBackButton} />
+      )}
+
+      {menu === "story" && (
+        <SidebarStory onClickBackButton={handleBackButton} />
       )}
 
       {menu === "home" && (
